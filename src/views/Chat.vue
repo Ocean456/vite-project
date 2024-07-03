@@ -22,6 +22,9 @@ const init = async () => {
         data.value = res.data
         loading.value = false
     })
+    if (data.value.length > 0) {
+        messageStore().other = data.value[0].contactUsername
+    }
     loadUserInfo()
 }
 
@@ -50,6 +53,7 @@ onMounted(() => {
                 <el-main class="main">
                     <Interface/>
                 </el-main>
+
             </el-container>
         </el-container>
     </div>

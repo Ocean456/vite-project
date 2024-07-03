@@ -14,6 +14,7 @@ const login = () => {
             const Header = res.headers['authorization']
             const token = Header.split(' ')[1]
             localStorage.setItem('token', token)
+            userStore().setToken(token)
             userStore().setUsername(res.data.username)
             sessionStorage.setItem('username', res.data.username)
             index.push('/chat')

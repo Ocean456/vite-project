@@ -22,6 +22,10 @@ const index = createRouter({
         {
             path: '/chat',
             component: () => import('../views/Chat.vue')
+        },
+        {
+            path: '/info',
+            component: () => import('../views/Information.vue')
         }
     ]
 })

@@ -20,7 +20,9 @@ export const userStore = defineStore('user', {
         logout() {
             this.token = ''
             this.username = ''
+            this.avatar = ''
             localStorage.removeItem('token')
+            sessionStorage.removeItem('username')
         },
         getToken() {
             return this.token
@@ -34,7 +36,7 @@ export const userStore = defineStore('user', {
 export const messageStore = defineStore('msg', {
     state: () => ({
         self: userStore().username,
-        other: '19574499522',
+        other: '',
         selfAvatar: '',
         otherAvatar: '',
         otherNickname: '小明'
