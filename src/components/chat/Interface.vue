@@ -3,7 +3,8 @@
 import {onMounted, reactive, ref, watchEffect} from "vue";
 import Message from "./Message.vue";
 import {getMessages, sendMessageToUser} from "../../api";
-import {messageStore} from "../../store";
+import {contactStore, messageStore} from "../../store";
+import {ElNotification} from "element-plus";
 
 
 // websocket connection
@@ -58,7 +59,8 @@ const loadMessages = async () => {
         (message.receiver === messageStore().self && message.sender === messageStore().other)
     );*/
     const res = await getMessages()
-    data.messages = res.data.map((msg: any) => ({
+    data.messages = res.data.map((msg: any, index: number) => ({
+        id: `msg-${msg.sender}-${msg.receiver}-${index}`,
         text: msg.content,
         receiver: msg.receiver,
         sender: msg.sender
@@ -83,6 +85,7 @@ const sendMessage = () => {
     })
 }
 
+
 ws.onmessage = (event) => {
     const message = JSON.parse(event.data)
     if (message.receiver === messageStore().self || message.sender === messageStore().self) {
@@ -92,18 +95,26 @@ ws.onmessage = (event) => {
             receiver: message.receiver
         })
     }
+    // ElNotification.info('新的消息')
+    const contact = contactStore().getContact(message.sender)
+    ElNotification({
+        // @ts-ignore
+        title: contact.contactNickname,
+        message: message.content,
+    })
 }
 
 watchEffect(() => {
     if (messageStore().other !== data.info.other) {
         data.info.other = messageStore().other
+        data.info.otherNickname = messageStore().otherNickname
         loadMessages()
     }
 })
 </script>
 
 <template>
-    <div id="interface">
+    <div id="interface" style="min-width: 200px">
         <el-card class="card">
             <template #header>
                 {{ data.info.otherNickname }}

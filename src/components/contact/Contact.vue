@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {computed, defineProps, onMounted, ref} from "vue";
-import {messageStore} from "../store";
+import {messageStore} from "../../store";
 
 const props = defineProps({
     contactNickname: String,

@@ -1,13 +1,23 @@
 <script setup lang="ts">
 
 import {onMounted, ref} from "vue";
-import Contact from "../components/Contact.vue";
+import Contact from "../components/contact/Contact.vue";
 import Header from "../components/Menu.vue";
 import Interface from "../components/chat/Interface.vue";
 import {getContacts, getPersonalInfo} from "../api";
-import {messageStore} from "../store";
+import {contactStore, messageStore} from "../store";
+import AddContact from "../components/contact/AddContact.vue";
 
-const data = ref()
+interface ContactItem {
+    contactUsername: string;
+    contactNickname: string;
+    contactAvatar: string;
+    contactStatus: string;
+}
+
+const contacts = ref<ContactItem[]>([])
+const loading = ref(true)
+const visible = ref(false)
 
 const loadUserInfo = () => {
     getPersonalInfo().then((res) => {
@@ -15,24 +25,26 @@ const loadUserInfo = () => {
     })
 }
 
-
-const loading = ref(true)
-const init = async () => {
+const initializeContacts = async () => {
     await getContacts().then((res) => {
-        data.value = res.data
+        contacts.value = res.data
         loading.value = false
+        contactStore().setContacts(res.data)
     })
-    if (data.value.length > 0) {
-        messageStore().other = data.value[0].contactUsername
+    if (contacts.value.length > 0) {
+        messageStore().other = contacts.value[0].contactUsername
     }
     loadUserInfo()
 }
 
-
 onMounted(() => {
-    init();
+    initializeContacts();
 })
 
+
+const showDialog = () => {
+    visible.value = true
+}
 
 </script>
 
@@ -45,17 +57,24 @@ onMounted(() => {
             <el-container>
                 <el-aside class="aside">
                     <el-scrollbar v-loading='loading'>
-                        <div v-for="contact in data">
+                        <div v-for="contact in contacts">
                             <Contact class="contact" v-bind="contact"/>
+                        </div>
+                        <div>
+                            <el-button style="margin-top: 20px;width: 80%;margin-left: 10%;" type="info"
+                                       class="button" @click="showDialog">添加联系人
+                            </el-button>
                         </div>
                     </el-scrollbar>
                 </el-aside>
                 <el-main class="main">
                     <Interface/>
                 </el-main>
-
             </el-container>
         </el-container>
+        <el-dialog class="addContact" v-model="visible" :show-close="false">
+            <AddContact/>
+        </el-dialog>
     </div>
 </template>
 
@@ -83,6 +102,21 @@ onMounted(() => {
 
 .main {
     padding: 0;
+}
+
+/*.el-scrollbar {
+    height: calc(100vh - 60px);
+    overflow-y: auto;
+    position: relative;
+}*/
+
+.button {
+    width: 100%;
+}
+
+:deep(.el-dialog) {
+    max-width: 430px;
+    min-width: 400px;
 }
 
 /*.container{

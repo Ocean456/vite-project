@@ -25,7 +25,7 @@ const index = createRouter({
         },
         {
             path: '/info',
-            component: () => import('../views/Information.vue')
+            component: () => import('../components/Information.vue')
         }
     ]
 })

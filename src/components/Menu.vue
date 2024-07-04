@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {ArrowDown} from '@element-plus/icons-vue'
-import Information from "../views/Information.vue";
+import Information from "./Information.vue";
 import {ref} from "vue";
 import {userStore} from "../store";
 import router from "../router";
@@ -59,7 +59,7 @@ const logout = () => {
 
 .el-dropdown-link {
     cursor: pointer;
-    color: var(--el-color-primary);
+    color: var(--el-color-info);
     display: flex;
     align-items: center;
     outline: none;

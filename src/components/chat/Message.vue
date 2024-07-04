@@ -1,6 +1,6 @@
 <template>
     <div id="message">
-        <div v-for="message in msg" :key="message.text" :class="[message.position, 'message-container']">
+        <div v-for="message in msg" :key="message.id" :class="[message.position, 'message-container']">
             <div class="message" :class="message.position">
                 <div class="text">
                     {{ message.text }}
@@ -19,6 +19,7 @@ import {onMounted, ref, watchEffect} from "vue";
 import {messageStore} from "../../store";
 
 interface Message {
+    id: string,
     text: string,
     position: string,
     sender: string
@@ -37,12 +38,14 @@ const props = defineProps({
 
 
 const msg = ref([{
+    id: '',
     text: '',
     position: ''
 }])
 
 const init = (props: Props) => {
     msg.value = props.data.messages.map((message) => ({
+        id: message.id,
         text: message.text,
         position: message.sender === messageStore().self ? 'right' : 'left'
     }));

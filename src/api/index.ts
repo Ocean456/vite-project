@@ -22,6 +22,12 @@ export const register = (username: string, password: string) =>
 export const getContacts = () =>
     api.get('/contact/personal')
 
+export const searchContact = (username: string) =>
+    api.get('/contact/search', {params: {username}})
+
+export const addContact = (username: string) =>
+    api.post('/contact/add', {username})
+
 export const getMessages = () =>
     api.get('/message/personal')
 

@@ -53,3 +53,18 @@ export const messageStore = defineStore('msg', {
         },
     }
 })
+
+
+export const contactStore = defineStore('contact', {
+    state:() => ({
+        contacts: []
+    }),
+    actions: {
+        setContacts(contacts: any) {
+            this.contacts = contacts
+        },
+        getContact(username: string) {
+            return this.contacts.find((contact: any) => contact.contactUsername === username)
+        }
+    }
+})
