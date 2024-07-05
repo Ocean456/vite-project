@@ -1,11 +1,11 @@
 <script setup lang="ts">
 
-import {onMounted, reactive, ref, watchEffect} from "vue";
+import {onMounted, reactive, ref, watch, watchEffect} from "vue";
 import Message from "./Message.vue";
 import {getMessages, sendMessageToUser} from "../../api";
 import {contactStore, messageStore} from "../../store";
 import {ElNotification} from "element-plus";
-
+import InfoCard from "../contact/InfoCard.vue";
 
 // websocket connection
 const token = localStorage.getItem('token')
@@ -111,13 +111,26 @@ watchEffect(() => {
         loadMessages()
     }
 })
+
+watch(() => messageStore().other, (newOther) => {
+    data.info.other = newOther;
+    data.info.otherNickname = messageStore().otherNickname;
+    data.info.otherAvatar = messageStore().otherAvatar;
+    loadMessages();
+});
+
 </script>
 
 <template>
     <div id="interface" style="min-width: 200px">
         <el-card class="card">
             <template #header>
-                {{ data.info.otherNickname }}
+                <el-tooltip effect="light">
+                    <template #content>
+                        <InfoCard/>
+                    </template>
+                    {{ data.info.otherNickname }}
+                </el-tooltip>
             </template>
             <el-scrollbar class="scrollbar">
                 <Message :data="data"/>

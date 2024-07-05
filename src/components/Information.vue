@@ -29,7 +29,7 @@ const loadUserInfo = async () => {
         region: res.data.region,
     }
     username.value = userStore().username
-    selectedArea.value = userInfo.value.region.split(' ');
+    selectedArea.value = userInfo.value.region?.split(' ') || [];
 };
 
 watch(selectedArea, (val) => {

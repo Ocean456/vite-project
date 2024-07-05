@@ -51,6 +51,7 @@ export const messageStore = defineStore('msg', {
         setOtherNickname(nickname: string) {
             this.otherNickname = nickname
         },
+
     }
 })
 

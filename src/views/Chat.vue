@@ -33,6 +33,8 @@ const initializeContacts = async () => {
     })
     if (contacts.value.length > 0) {
         messageStore().other = contacts.value[0].contactUsername
+        messageStore().otherAvatar = contacts.value[0].contactAvatar
+        messageStore().otherNickname = contacts.value[0].contactNickname
     }
     loadUserInfo()
 }
@@ -50,17 +52,17 @@ const showDialog = () => {
 
 <template>
     <div id="chat">
-        <el-container class="container">
+        <el-container class="container" v-loading='loading' element-loading-text="Hello">
             <el-header class="header">
                 <Header/>
             </el-header>
             <el-container>
                 <el-aside class="aside">
-                    <el-scrollbar v-loading='loading'>
-                        <div v-for="contact in contacts">
+                    <el-scrollbar >
+                        <div v-for="contact in contacts" :key="contact.contactUsername">
                             <Contact class="contact" v-bind="contact"/>
                         </div>
-                        <div>
+                        <div v-show="!loading">
                             <el-button style="margin-top: 20px;width: 80%;margin-left: 10%;" type="info"
                                        class="button" @click="showDialog">添加联系人
                             </el-button>
@@ -68,7 +70,7 @@ const showDialog = () => {
                     </el-scrollbar>
                 </el-aside>
                 <el-main class="main">
-                    <Interface/>
+                    <Interface v-show="!loading"/>
                 </el-main>
             </el-container>
         </el-container>

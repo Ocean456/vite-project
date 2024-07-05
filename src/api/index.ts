@@ -16,8 +16,11 @@ api.interceptors.request.use(function (config: any) {
 export const login = (username: string, password: string) =>
     api.post('/user/login', {username, password});
 
-export const register = (username: string, password: string) =>
-    api.post('/user/register', {username, password});
+export const register = (username: string, password: string, email: string, code: string) =>
+    api.post('/user/register', {username, password, email, code});
+
+export const sendEmailCode = (email: string) =>
+    api.get('/user/code', {params: {email}})
 
 export const getContacts = () =>
     api.get('/contact/personal')
@@ -26,7 +29,7 @@ export const searchContact = (username: string) =>
     api.get('/contact/search', {params: {username}})
 
 export const addContact = (username: string) =>
-    api.post('/contact/add', {username})
+    api.get('/contact/add', {params: {username}})
 
 export const getMessages = () =>
     api.get('/message/personal')

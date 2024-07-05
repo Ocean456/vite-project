@@ -33,6 +33,7 @@ const add = (username: string) => {
             type: 'success',
         });
     });
+    // contactStore().loadContacts();
 };
 </script>
 

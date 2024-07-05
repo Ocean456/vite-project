@@ -1,0 +1,55 @@
+<script setup lang="ts">
+
+import {messageStore} from "../../store";
+import {onMounted, ref} from "vue";
+import {searchContact} from "../../api";
+
+interface contact {
+    nickname: string,
+    username: string,
+    avatar: string,
+    email: string,
+    phone: string,
+    region: string
+}
+
+const contactInfo = ref<contact>({avatar: "", email: "", nickname: "", phone: "", region: "", username: ""})
+
+onMounted(async () => {
+    await searchContact(messageStore().other).then((res) => {
+        contactInfo.value = res.data[0]
+    })
+
+    console.log(contactInfo.value)
+})
+</script>
+
+<template>
+    <div id="infoCard">
+        <el-card class="card" shadow="never">
+            <div class="card-content">
+                <el-descriptions
+                    direction="horizontal"
+                    :column="1"
+                    size="small"
+                >
+
+                    <el-descriptions-item>
+                        <el-avatar :src="contactInfo.avatar" size="small"></el-avatar>
+                    </el-descriptions-item>
+                    <el-descriptions-item label="昵称" >{{ contactInfo.nickname }}</el-descriptions-item>
+                    <el-descriptions-item label="账号">{{ contactInfo.username }}</el-descriptions-item>
+                    <el-descriptions-item label="邮箱">{{ contactInfo.email }}</el-descriptions-item>
+                    <el-descriptions-item label="电话">{{ contactInfo.phone }}</el-descriptions-item>
+                    <el-descriptions-item label="地区">{{ contactInfo.region }}</el-descriptions-item>
+                </el-descriptions>
+            </div>
+        </el-card>
+    </div>
+</template>
+
+<style scoped>
+.card {
+    border: none;
+}
+</style>
