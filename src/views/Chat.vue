@@ -52,13 +52,38 @@ const showDialog = () => {
 
 <template>
     <div id="chat">
-        <el-container class="container" v-loading='loading' element-loading-text="Hello">
+        <el-container class="container" v-loading='loading' element-loading-text="Loading...">
             <el-header class="header">
                 <Header/>
             </el-header>
             <el-container>
+<!--
+                <el-menu class="menu"
+                         :unique-opened="true"
+                         :collapse="true"
+                         mode="vertical">
+                    <el-menu-item>
+                        <el-icon>
+                            <ChatLineRound/>
+                        </el-icon>
+                        <span slot="title">消息</span>
+                    </el-menu-item>
+                    <el-menu-item>
+                        <el-icon>
+                            <User/>
+                        </el-icon>
+                        <span slot="title">联系人</span>
+                    </el-menu-item>
+                    <el-menu-item>
+                        <el-icon>
+                            <Setting/>
+                        </el-icon>
+                        <span slot="title">设置</span>
+                    </el-menu-item>
+                </el-menu>
+-->
                 <el-aside class="aside">
-                    <el-scrollbar >
+                    <el-scrollbar>
                         <div v-for="contact in contacts" :key="contact.contactUsername">
                             <Contact class="contact" v-bind="contact"/>
                         </div>
@@ -104,6 +129,7 @@ const showDialog = () => {
 
 .main {
     padding: 0;
+    max-height: calc(100vh - 60px);
 }
 
 /*.el-scrollbar {

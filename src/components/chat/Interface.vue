@@ -75,6 +75,10 @@ onMounted(loadMessages)
 const send = ref<string>("")
 
 const sendMessage = () => {
+    if (send.value === "") {
+        ElNotification.error('消息不能为空')
+        return
+    }
     sendMessageToUser(messageStore().self, messageStore().other, send.value).then(() => {
         data.messages.push({
             text: send.value,
@@ -88,7 +92,7 @@ const sendMessage = () => {
 
 ws.onmessage = (event) => {
     const message = JSON.parse(event.data)
-    if (message.receiver === messageStore().self || message.sender === messageStore().self) {
+    if (message.receiver === messageStore().self && message.sender === messageStore().other) {
         data.messages.push({
             text: message.content,
             sender: message.sender,
@@ -97,10 +101,21 @@ ws.onmessage = (event) => {
     }
     // ElNotification.info('新的消息')
     const contact = contactStore().getContact(message.sender)
+    const array = contactStore().contacts
+
     ElNotification({
         // @ts-ignore
         title: contact.contactNickname,
         message: message.content,
+        duration: 5000,
+        onClick: () => {
+            messageStore().other = message.sender
+            // messageStore().otherAvatar = data.filter((item: any) => item.contactUsername === message.sender)[0].contactAvatar
+            // @ts-ignore
+            messageStore().otherNickname = array.filter((item: any) => item.contactUsername === message.sender)[0].contactNickname
+            // messageStore().otherAvatar = contact.contactAvatar
+            // messageStore().otherNickname = contact.contactNickname
+        }
     })
 }
 
@@ -136,11 +151,15 @@ watch(() => messageStore().other, (newOther) => {
                 <Message :data="data"/>
             </el-scrollbar>
             <template #footer>
-                <el-input v-model="send">
-                    <template #append>
-                        <el-button @click="sendMessage">发送</el-button>
-                    </template>
+                <el-input v-model="send"
+                          :rows="12"
+                          type="textarea"
+                          placeholder="请输入消息内容"
+                          resize="none"
+                          @keyup.enter="sendMessage"
+                >
                 </el-input>
+                <el-button class="send-button" @click="sendMessage" type="info">发送</el-button>
             </template>
         </el-card>
     </div>
@@ -156,7 +175,12 @@ watch(() => messageStore().other, (newOther) => {
 }
 
 :deep(.el-card__body) {
-    height: calc(100% - 170px);
+    height: calc(100% - 400px);
 }
 
+.send-button {
+    position: absolute;
+    right: 40px;
+    bottom: 40px;
+}
 </style>
