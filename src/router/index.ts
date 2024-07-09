@@ -2,6 +2,7 @@ import {createRouter, createWebHistory} from 'vue-router'
 
 const index = createRouter({
     history: createWebHistory(),
+    // history: createWebHashHistory(),
     routes: [
         {
             path: '/',

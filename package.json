@@ -17,9 +17,13 @@
     "vue-router": "^4.3.0"
   },
   "devDependencies": {
+    "@types/node": "^20.14.10",
     "@vitejs/plugin-vue": "^5.0.4",
+    "electron": "^31.1.0",
+    "electron-builder": "^24.13.3",
+    "ts-node": "^10.9.2",
     "typescript": "^5.2.2",
     "vite": "5.2.6",
-    "vue-tsc": "^1.8.27"
+    "vue-tsc": "latest"
   }
 }

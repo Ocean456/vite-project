@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {ref, watch, onMounted} from "vue";
-import {getPersonalInfo, modifyPersonalInfo} from "../api";
+import {getPersonalInfo, modifyPersonalInfo, modifyAvatar} from "../api";
 import {pcaTextArr} from "element-china-area-data";
 import {userStore} from "../store";
 import {ElMessage} from "element-plus";
@@ -14,6 +14,8 @@ const userInfo = ref({
 });
 
 const username = ref('')
+
+const fileInput = ref(null)
 
 const emit = defineEmits(['close']);
 
@@ -50,16 +52,33 @@ const modify = () => {
     }).catch(() => {
         ElMessage.error('修改失败')
     })
+}
 
+const uploadAvatar = () => {
+    // @ts-ignore
+    fileInput.value.click()
+}
 
+const handleAvatarChange = async (e: any) => {
+    const file = e.target.files[0]
+    if (file) {
+        try {
+            await modifyAvatar(file)
+            ElMessage.success('上传成功')
+            await loadUserInfo()
+        } catch (e) {
+            ElMessage.error('上传失败' + e)
+        }
+    }
 }
 </script>
 
 <template>
     <div id="information">
         <el-card class="card" shadow="never" style="border: none">
-            <div class="centered-content">
-                <el-avatar shape="square" style="margin-bottom: 30px" size="large" :src="userInfo.avatar"></el-avatar>
+            <div class="centered-content" >
+                <el-avatar shape="square" @click="uploadAvatar" style="margin-bottom: 30px" size="large" :src="userInfo.avatar"></el-avatar>
+                <input type="file" ref="fileInput" @change="handleAvatarChange" style="display: none">
             </div>
             <!--            <div>
                             <el-button class="button" size="small" type="primary">更换头像</el-button>
@@ -72,7 +91,7 @@ const modify = () => {
                     <el-input v-model="userInfo.nickname" placeholder="昵称"></el-input>
                 </el-form-item>
                 <el-form-item label="邮箱">
-                    <el-input v-model="userInfo.email" placeholder="邮箱"></el-input>
+                    <el-input disabled v-model="userInfo.email" placeholder="邮箱"></el-input>
                 </el-form-item>
                 <el-form-item label="手机号">
                     <el-input v-model="userInfo.phone" placeholder="手机号"></el-input>

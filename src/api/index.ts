@@ -40,5 +40,11 @@ export const getPersonalInfo = () =>
 export const modifyPersonalInfo = (nickname: string, avatar: string, email: string, phone: string, region: string) =>
     api.post('/user/info/modify', {nickname, avatar, email, phone, region})
 
+export const modifyAvatar = (file: File) => {
+    const formData = new FormData();
+    formData.append('file', file);
+    return api.post('/user/info/avatar', formData, {headers: {'Content-Type': 'multipart/form-data'}})
+}
+
 export const sendMessageToUser = (sender: string, receiver: string, content: string) =>
     api.post('/message/send', {sender, receiver, content})

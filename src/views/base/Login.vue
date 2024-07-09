@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<!--<script setup lang="ts">
 import {ref} from 'vue'
 import {login as apiLogin} from "../../api";
 import index from "../../router";
@@ -23,8 +23,39 @@ const login = () => {
         }
     })
 }
-</script>
+</script>-->
+<script setup lang="ts">
+import {ref} from 'vue'
+import {login as apiLogin} from "../../api";
+import index from "../../router";
+import {ElMessage} from "element-plus";
+import {userStore} from "../../store";
 
+const username = ref('18478002720')
+const password = ref('123456')
+const login = async () => {
+    try {
+        const res = await apiLogin(username.value, password.value);
+        if (res.status == 200) {
+            const Header = res.headers['authorization']
+            const token = Header.split(' ')[1]
+            localStorage.setItem('token', token)
+            userStore().setToken(token)
+            userStore().setUsername(res.data.username)
+            sessionStorage.setItem('username', res.data.username)
+            index.push('/chat')
+        } else {
+            ElMessage.warning('登录失败' + res.data)
+        }
+    } catch (error: any) {
+        if (error.response.status === 401) {
+            ElMessage.warning('用户名或密码错误')
+        } else {
+            ElMessage.warning('登录失败')
+        }
+    }
+}
+</script>
 <template>
     <div id="login">
         <el-card class="card">
