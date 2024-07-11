@@ -1,8 +1,8 @@
 import axios from 'axios';
 import {userStore} from "../store";
 
-
-const api = axios.create({baseURL: 'http://localhost:1010'});
+// const api = axios.create({baseURL: 'http://localhost:1010'});
+const api = axios.create({baseURL: 'http://36.212.25.142:1010'});
 
 api.interceptors.request.use(function (config: any) {
     if (!config.url.startsWith('/user/login') || !config.url.startsWith('/user/register')) {

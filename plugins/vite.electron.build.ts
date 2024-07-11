@@ -33,7 +33,7 @@ export const ElectronBuilderPlugin = (): Plugin => {
                     },
                     asar: true,
                     appId: 'com.example.app',
-                    productName: 'example',
+                    productName: 'Demo',
                     nsis: {
                         oneClick: false,
                         allowToChangeInstallationDirectory: true,

@@ -4,6 +4,10 @@ import {messageStore} from "../../store";
 import {onMounted, ref} from "vue";
 import {searchContact} from "../../api";
 
+const props = defineProps<{
+    username?: string
+}>()
+
 interface contact {
     nickname: string,
     username: string,
@@ -16,11 +20,10 @@ interface contact {
 const contactInfo = ref<contact>({avatar: "", email: "", nickname: "", phone: "", region: "", username: ""})
 
 onMounted(async () => {
-    await searchContact(messageStore().other).then((res) => {
+    const username = props.username || messageStore().other
+    await searchContact(/*messageStore().other*/username).then((res) => {
         contactInfo.value = res.data[0]
     })
-
-    console.log(contactInfo.value)
 })
 </script>
 
@@ -37,7 +40,7 @@ onMounted(async () => {
                     <el-descriptions-item>
                         <el-avatar :src="contactInfo.avatar" size="small"></el-avatar>
                     </el-descriptions-item>
-                    <el-descriptions-item label="昵称" >{{ contactInfo.nickname }}</el-descriptions-item>
+                    <el-descriptions-item label="昵称">{{ contactInfo.nickname }}</el-descriptions-item>
                     <el-descriptions-item label="账号">{{ contactInfo.username }}</el-descriptions-item>
                     <el-descriptions-item label="邮箱">{{ contactInfo.email }}</el-descriptions-item>
                     <el-descriptions-item label="电话">{{ contactInfo.phone }}</el-descriptions-item>

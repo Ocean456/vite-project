@@ -22,5 +22,7 @@ app.whenReady().then(() => {
 
     win.removeMenu();
 
+    win.resizable = false
+
 
 })

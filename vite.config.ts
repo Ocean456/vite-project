@@ -1,7 +1,7 @@
 import {defineConfig} from 'vite'
 import vue from '@vitejs/plugin-vue'
-import {ElectronDevPlugin} from "./plugins/vite.electron.dev";
-import {ElectronBuilderPlugin} from "./plugins/vite.electron.build";
+import {ElectronDevPlugin} from "./plugins/vite.electron.dev"
+import {ElectronBuilderPlugin} from "./plugins/vite.electron.build"
 import {fileURLToPath} from "node:url";
 
 
@@ -13,9 +13,9 @@ export default defineConfig({
         ElectronBuilderPlugin()
     ],
     base: './',
-/*    resolve: {
-        alias: {
-            '@': fileURLToPath(new URL('./src', import.meta.url))
-        }
-    }*/
+    /*    resolve: {
+            alias: {
+                '@': fileURLToPath(new URL('./src', import.meta.url))
+            }
+        }*/
 })

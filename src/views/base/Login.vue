@@ -31,8 +31,10 @@ import index from "../../router";
 import {ElMessage} from "element-plus";
 import {userStore} from "../../store";
 
-const username = ref('18478002720')
-const password = ref('123456')
+// const username = ref('18478002720')
+const username = ref('')
+// const password = ref('123456')
+const password = ref('')
 const login = async () => {
     try {
         const res = await apiLogin(username.value, password.value);
@@ -43,7 +45,7 @@ const login = async () => {
             userStore().setToken(token)
             userStore().setUsername(res.data.username)
             sessionStorage.setItem('username', res.data.username)
-            index.push('/chat')
+            await index.push('/chat')
         } else {
             ElMessage.warning('登录失败' + res.data)
         }
@@ -59,6 +61,9 @@ const login = async () => {
 <template>
     <div id="login">
         <el-card class="card">
+            <template #header>
+                <div  style="text-align: center;font-size: 20px">登录</div>
+            </template>
             <el-form>
                 <el-form-item label="账号">
                     <el-input v-model="username" placeholder="账号"></el-input>

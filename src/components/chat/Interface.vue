@@ -9,7 +9,8 @@ import InfoCard from "../contact/InfoCard.vue";
 
 // websocket connection
 const token = localStorage.getItem('token')
-const ws = new WebSocket(`ws://localhost:1010/socket?token=${token}`)
+// const ws = new WebSocket(`ws://localhost:1010/socket?token=${token}`)
+const ws = new WebSocket(`ws://36.212.25.142:1010/socket?token=${token}`)
 
 ws.onopen = () => console.log('Connected to the server')
 
@@ -138,9 +139,9 @@ watch(() => messageStore().other, (newOther) => {
 
 <template>
     <div id="interface" style="min-width: 200px">
-        <el-card class="card">
+        <el-card class="card" style="background-color: #f5f5f5" >
             <template #header>
-                <el-tooltip effect="light">
+                <el-tooltip effect="light" trigger="click" v-if=" data.info.otherNickname!==' '">
                     <template #content>
                         <InfoCard/>
                     </template>
@@ -152,7 +153,7 @@ watch(() => messageStore().other, (newOther) => {
             </el-scrollbar>
             <template #footer>
                 <el-input v-model="send"
-                          :rows="12"
+                          :rows="9"
                           type="textarea"
                           placeholder="请输入消息内容"
                           resize="none"
@@ -175,7 +176,8 @@ watch(() => messageStore().other, (newOther) => {
 }
 
 :deep(.el-card__body) {
-    height: calc(100% - 400px);
+    height: calc(100% - 300px);
+    padding: 0;
 }
 
 .send-button {
@@ -183,4 +185,14 @@ watch(() => messageStore().other, (newOther) => {
     right: 40px;
     bottom: 40px;
 }
+
+:deep(.el-textarea__inner) {
+    background-color: #f5f5f5;
+    box-shadow: none;
+}
+
+:deep(.el-card__header) {
+    min-height: 57.6px;
+}
+
 </style>

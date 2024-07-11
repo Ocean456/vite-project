@@ -2,7 +2,7 @@
 import {ref, watch, onMounted} from "vue";
 import {getPersonalInfo, modifyPersonalInfo, modifyAvatar} from "../api";
 import {pcaTextArr} from "element-china-area-data";
-import {userStore} from "../store";
+import {messageStore, userStore} from "../store";
 import {ElMessage} from "element-plus";
 
 const userInfo = ref({
@@ -32,6 +32,7 @@ const loadUserInfo = async () => {
     }
     username.value = userStore().username
     selectedArea.value = userInfo.value.region?.split(' ') || [];
+    messageStore().selfAvatar = res.data.avatar
 };
 
 watch(selectedArea, (val) => {

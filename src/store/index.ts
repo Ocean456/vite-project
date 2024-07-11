@@ -39,7 +39,7 @@ export const messageStore = defineStore('msg', {
         other: '',
         selfAvatar: '',
         otherAvatar: '',
-        otherNickname: '小明'
+        otherNickname: ''
     }),
     actions: {
         setOther(other: string) {
@@ -51,13 +51,18 @@ export const messageStore = defineStore('msg', {
         setOtherNickname(nickname: string) {
             this.otherNickname = nickname
         },
+        clear() {
+            this.other = ''
+            this.otherAvatar = ''
+            this.otherNickname = ''
+        }
 
     }
 })
 
 
 export const contactStore = defineStore('contact', {
-    state:() => ({
+    state: () => ({
         contacts: []
     }),
     actions: {
@@ -66,6 +71,9 @@ export const contactStore = defineStore('contact', {
         },
         getContact(username: string) {
             return this.contacts.find((contact: any) => contact.contactUsername === username)
+        },
+        clear() {
+            this.contacts = []
         }
     }
 })

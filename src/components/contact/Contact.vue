@@ -43,12 +43,12 @@ const isActiveUser = computed(() => messageStore().other === props.contactUserna
             <div class="message">
                 <div class="avatar">
                     <!--          <el-badge :show-zero="false"  :value="unreadMessages">-->
-                    <el-avatar :src="contactAvatar"></el-avatar>
+                    <el-avatar :src="contactAvatar" :size="35"></el-avatar>
                     <!--          </el-badge>-->
                 </div>
                 <div class="content" v-bind="props">
                     <div class="line">
-                        <span class="name" ref="contactNameRef">{{ contactNickname }}</span>
+                        <span class="name" >{{ contactNickname }}</span>
                         <div style="flex-grow: 1"></div>
                         <span class="time" v-show="showContactTime">{{ lastMessageTime }}</span>
                     </div>
@@ -63,19 +63,20 @@ const isActiveUser = computed(() => messageStore().other === props.contactUserna
 .message {
     display: flex;
     align-items: center;
-    height: 80px;
+    height: 60px;
     width: 100%;
-    padding: 2px 0;
+    padding: 2px 10px;
 }
 
 .content {
     display: flex;
     flex-direction: column;
-    margin-left: 10px;
-    margin-top: 14px;
+    margin-left: 1px;
+    margin-top: 10px;
     margin-right: 10px;
     overflow: hidden;
     width: inherit;
+    font-size: 0.9em;
 }
 
 #contact {
@@ -83,7 +84,7 @@ const isActiveUser = computed(() => messageStore().other === props.contactUserna
 }
 
 .contactCard {
-    height: 80px;
+    height: 60px;
 }
 
 :deep(.el-card__body) {
@@ -112,7 +113,6 @@ const isActiveUser = computed(() => messageStore().other === props.contactUserna
 }
 
 .name {
-    /*    font-weight: bold;*/
     font-family: "Arial", "Microsoft YaHei", "黑体", "宋体", sans-serif;
     white-space: nowrap;
     overflow: hidden;

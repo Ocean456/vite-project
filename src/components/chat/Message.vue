@@ -1,5 +1,5 @@
 <template>
-    <div id="message">
+    <div id="message" style="padding: 20px;">
         <div v-for="message in msg" :key="message.id" :class="[message.position, 'message-container']">
             <div class="message" :class="message.position">
                 <div class="text">
@@ -82,12 +82,12 @@ watchEffect(() => {
 
 .left {
     align-self: flex-start;
-    background-color: #f5f5f5;
+    background-color: white;
 }
 
 .right {
     align-self: flex-end;
-    background-color: #d4e6f1;
+    background-color: #d9ecff;
 }
 
 .text {
