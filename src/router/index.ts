@@ -10,7 +10,7 @@ const index = createRouter({
         },
         {
             path: '/about',
-            component: () => import('../views/About.vue')
+            component: () => import('../views/base/About.vue')
         },
         {
             path: '/login',
@@ -21,12 +21,12 @@ const index = createRouter({
             component: () => import('../views/base/Register.vue')
         },
         {
-            path: '/chat',
-            component: () => import('../views/Chat.vue')
+            path: '/main',
+            component: () => import('../views/Main.vue')
         },
         {
             path: '/info',
-            component: () => import('../components/Information.vue')
+            component: () => import('../components/personal/Information.vue')
         }
     ]
 })

@@ -6,14 +6,15 @@ import * as path from "node:path";
 const buildBackground = () => {
     import('esbuild').then((esbuild) => {
         esbuild.build({
-            entryPoints: ['src/background.ts'],
+            entryPoints: ['src/background.ts', 'src/preload.ts'],
             bundle: true,
-            outfile: 'dist/background.js',
+            outdir: 'dist',
             platform: 'node',
             target: 'node22',
             external: ['electron'],
         })
     })
+
 }
 
 export const ElectronBuilderPlugin = (): Plugin => {
@@ -25,19 +26,24 @@ export const ElectronBuilderPlugin = (): Plugin => {
             json.main = 'background.js'
             fs.writeFileSync('dist/package.json', JSON.stringify(json, null, 4))
             fs.mkdirSync('dist/node_modules', {recursive: true})
+
             electronBuilder.build({
                 config: {
                     directories: {
                         output: path.resolve(process.cwd(), 'release'),
                         app: path.resolve(process.cwd(), 'dist')
                     },
-                    asar: true,
-                    appId: 'com.example.app',
+                    appId: 'com.example.app2',
                     productName: 'Demo',
+                    asar: true,
                     nsis: {
                         oneClick: false,
                         allowToChangeInstallationDirectory: true,
-                    }
+                    },
+                    asarUnpack: [
+                        'node_modules/**/*'
+                    ],
+
                 }
             })
         }

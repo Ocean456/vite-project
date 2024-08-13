@@ -14,10 +14,10 @@ interface contact {
     avatar: string,
     email: string,
     phone: string,
-    region: string
+    area: string
 }
 
-const contactInfo = ref<contact>({avatar: "", email: "", nickname: "", phone: "", region: "", username: ""})
+const contactInfo = ref<contact>({avatar: "", email: "", nickname: "", phone: "", area: "", username: ""})
 
 onMounted(async () => {
     const username = props.username || messageStore().other
@@ -44,7 +44,7 @@ onMounted(async () => {
                     <el-descriptions-item label="账号">{{ contactInfo.username }}</el-descriptions-item>
                     <el-descriptions-item label="邮箱">{{ contactInfo.email }}</el-descriptions-item>
                     <el-descriptions-item label="电话">{{ contactInfo.phone }}</el-descriptions-item>
-                    <el-descriptions-item label="地区">{{ contactInfo.region }}</el-descriptions-item>
+                    <el-descriptions-item label="地区">{{ contactInfo.area }}</el-descriptions-item>
                 </el-descriptions>
             </div>
         </el-card>

@@ -2,8 +2,9 @@ import {defineStore} from "pinia";
 
 export const userStore = defineStore('user', {
     state: () => ({
-        username: sessionStorage.getItem('username') || '',
+        username: localStorage.getItem('username') || '',
         avatar: '',
+        nickname: '',
         token: localStorage.getItem('token') || '',
     }),
     actions: {
@@ -11,35 +12,31 @@ export const userStore = defineStore('user', {
             this.token = token
             localStorage.setItem('token', token)
         },
-        setUsername(username: string) {
+        init(username: string, avatar: string) {
             this.username = username
-        },
-        setAvatar(avatar: string) {
             this.avatar = avatar
+            localStorage.setItem('username', username)
         },
         logout() {
-            this.token = ''
-            this.username = ''
-            this.avatar = ''
             localStorage.removeItem('token')
-            sessionStorage.removeItem('username')
+            localStorage.removeItem('username')
         },
         getToken() {
             return this.token
         },
-        getUsername() {
-            return this.username
-        }
-    }
+    },
+
 })
 
 export const messageStore = defineStore('msg', {
     state: () => ({
-        self: userStore().username,
+        // username
+        self: '',
         other: '',
         selfAvatar: '',
         otherAvatar: '',
-        otherNickname: ''
+        otherNickname: '',
+        type: ''
     }),
     actions: {
         setOther(other: string) {
@@ -51,13 +48,25 @@ export const messageStore = defineStore('msg', {
         setOtherNickname(nickname: string) {
             this.otherNickname = nickname
         },
+        setType(type: string) {
+            this.type = type
+        },
+        switchUser(other: string, otherAvatar: string, otherNickname: string, type: string) {
+            this.other = other
+            this.otherAvatar = otherAvatar
+            this.otherNickname = otherNickname
+            this.type = type
+        },
         clear() {
+            this.self = userStore().username
+            this.selfAvatar = ''
             this.other = ''
             this.otherAvatar = ''
             this.otherNickname = ''
         }
 
-    }
+    },
+
 })
 
 
@@ -72,8 +81,32 @@ export const contactStore = defineStore('contact', {
         getContact(username: string) {
             return this.contacts.find((contact: any) => contact.contactUsername === username)
         },
+        getContacts() {
+            return this.contacts
+        },
         clear() {
             this.contacts = []
-        }
+        },
+    }
+})
+
+
+export const groupStore = defineStore('group', {
+    state: () => ({
+        groups: []
+    }),
+    actions: {
+        setGroups(groups: any) {
+            this.groups = groups
+        },
+        getGroup(number: string) {
+            return this.groups.find((group: any) => group.groupId === number)
+        },
+        getGroups() {
+            return this.groups
+        },
+        clear() {
+            this.groups = []
+        },
     }
 })

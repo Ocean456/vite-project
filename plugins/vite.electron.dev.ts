@@ -7,11 +7,12 @@ import * as fs from "node:fs";
 const buildBackground = () => {
     import('esbuild').then((esbuild) => {
         esbuild.build({
-            entryPoints: ['src/background.ts'],
+            entryPoints: ['src/background.ts', 'src/preload.ts'],
             bundle: true,
-            outfile: 'dist/background.js',
+            // outfile: 'dist/background.js',
+            outdir: 'dist',
             platform: 'node',
-            target: 'node12',
+            target: 'node22',
             external: ['electron'],
         })
     })

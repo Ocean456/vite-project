@@ -17,6 +17,8 @@
     "noEmit": true,
     "jsx": "preserve",
 
+    "esModuleInterop": true,
+
     /* Linting */
     "strict": true,
     "noUnusedLocals": true,

@@ -1,0 +1,12 @@
+html.dark {
+    --el-menu-bg-color: #303030;
+    --el-aside-bg-color: #282828;
+    --el-bg-color: #353535;
+    --el-bg-color-overlay: #282828;
+    --el-anchor-active-color: #353535;
+    --el-text-bg-color-secondary: #555555;
+    --el-text-bg-color-third: darkolivegreen;
+    --el-menu-bg-color-secondary: #555555;
+    --el-menu-item-hover-bg-color: #777777;
+}
+

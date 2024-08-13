@@ -10,7 +10,7 @@ export default defineConfig({
     plugins: [
         vue(),
         ElectronDevPlugin(),
-        ElectronBuilderPlugin()
+        ElectronBuilderPlugin(),
     ],
     base: './',
     /*    resolve: {
@@ -18,4 +18,9 @@ export default defineConfig({
                 '@': fileURLToPath(new URL('./src', import.meta.url))
             }
         }*/
+    build: {
+        rollupOptions: {
+            external: ['electron', 'better-sqlite3'],
+        }
+    }
 })

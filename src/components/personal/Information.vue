@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import {ref, watch, onMounted} from "vue";
-import {getPersonalInfo, modifyPersonalInfo, modifyAvatar} from "../api";
+import {getSelfInfo, modifyPersonalInfo, modifyAvatar} from "../../api";
 import {pcaTextArr} from "element-china-area-data";
-import {messageStore, userStore} from "../store";
+import {messageStore, userStore} from "../../store";
 import {ElMessage} from "element-plus";
 
 const userInfo = ref({
@@ -10,7 +10,7 @@ const userInfo = ref({
     avatar: '',
     email: '',
     phone: '',
-    region: '',
+    area: '',
 });
 
 const username = ref('')
@@ -22,21 +22,21 @@ const emit = defineEmits(['close']);
 const selectedArea = ref<string[]>([]);
 
 const loadUserInfo = async () => {
-    const res = await getPersonalInfo();
+    const res = await getSelfInfo();
     userInfo.value = {
         nickname: res.data.nickname,
         avatar: res.data.avatar,
         email: res.data.email,
         phone: res.data.phone,
-        region: res.data.region,
+        area: res.data.area,
     }
     username.value = userStore().username
-    selectedArea.value = userInfo.value.region?.split(' ') || [];
+    selectedArea.value = userInfo.value.area?.split(' ') || [];
     messageStore().selfAvatar = res.data.avatar
 };
 
 watch(selectedArea, (val) => {
-    userInfo.value.region = val.join(' ');
+    userInfo.value.area = val.join(' ');
 });
 
 onMounted(loadUserInfo);
@@ -46,7 +46,7 @@ const modify = () => {
         userInfo.value.avatar,
         userInfo.value.email,
         userInfo.value.phone,
-        userInfo.value.region,
+        userInfo.value.area,
     ).then(() => {
         ElMessage.success('修改成功')
         emit('close');
@@ -62,6 +62,7 @@ const uploadAvatar = () => {
 
 const handleAvatarChange = async (e: any) => {
     const file = e.target.files[0]
+    ElMessage.info('正在上传')
     if (file) {
         try {
             await modifyAvatar(file)
@@ -78,12 +79,11 @@ const handleAvatarChange = async (e: any) => {
     <div id="information">
         <el-card class="card" shadow="never" style="border: none">
             <div class="centered-content" >
-                <el-avatar shape="square" @click="uploadAvatar" style="margin-bottom: 30px" size="large" :src="userInfo.avatar"></el-avatar>
+                <el-avatar shape="square" @click="uploadAvatar" style="margin-bottom: 30px" size="large" :src="userInfo.avatar">
+                    <el-badge value="上传" class="badge" style="margin-top: 10px"></el-badge>
+                </el-avatar>
                 <input type="file" ref="fileInput" @change="handleAvatarChange" style="display: none">
             </div>
-            <!--            <div>
-                            <el-button class="button" size="small" type="primary">更换头像</el-button>
-                        </div>-->
             <el-form label-width="100px" style="margin-right: 40px">
                 <el-form-item label="用户名">
                     <el-input v-model="username" placeholder="用户名" disabled></el-input>
@@ -101,7 +101,7 @@ const handleAvatarChange = async (e: any) => {
                     <el-cascader
                         :options="pcaTextArr"
                         v-model="selectedArea"
-                        style="width: 100%"
+                        style="width: 100%;"
                         separator=" "
                         placeholder="请选择省市区">
                     </el-cascader>
@@ -120,4 +120,6 @@ const handleAvatarChange = async (e: any) => {
     align-items: center;
     flex-direction: column;
 }
+
+
 </style>

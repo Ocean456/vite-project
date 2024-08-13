@@ -8,14 +8,16 @@ const config = reactive({
 </script>
 
 <template>
-  <el-config-provider :message="config">
-    <router-view class="router"></router-view>
-  </el-config-provider>
+
+        <el-config-provider :message="config">
+            <router-view class="router"></router-view>
+        </el-config-provider>
+
+
 </template>
 
 <style scoped>
 .router {
   height: 100vh;
 }
-
 </style>
