@@ -1,16 +1,18 @@
 <script setup lang="ts">
 import SidebarMenu from "../components/main/SidebarMenu.vue";
 import {onMounted, ref, shallowRef, watch} from 'vue'
-import MessageCardList from "./main/MessageCardList.vue";
-import {getContacts, getSelfInfo, getMessages, getNewMessages, getGroup, getGroupMessages} from "../api";
+import MessageCardList from "../components/message/MessageCardList.vue";
+import {getContacts, getSelfInfo, getMessages, getNewMessages, getGroup, getGroupMessages} from "../request";
 import WindowControls from "../components/main/WindowControls.vue";
 import {ElMessage} from "element-plus";
 import {contactStore, groupStore, messageStore, userStore} from "../store";
-import BlankPage from "../components/BlankPage.vue";
+import BlankPage from "../components/main/BlankPage.vue";
 import FriendChat from "../components/chat/Chat.vue";
 import router from "../router";
 import ContactSearchAdd from "../components/contact/ContactSearchAdd.vue";
 import Information from "../components/personal/Information.vue";
+import GroupCreate from "../components/group/GroupCreate.vue";
+import GroupSearchAdd from "../components/group/GroupSearchAdd.vue";
 
 const {setContacts} = contactStore()
 const {setGroups} = groupStore()
@@ -130,7 +132,7 @@ const loadGroupMessageData = async () => {
 const saveData = async () => {
     const serializedData = JSON.stringify(messageData.value)
     const serializedGroupData = JSON.stringify(groupMessageData.value)
-    await window.electronAPI.saveMessages(serializedData, 'default')
+    await window.electronAPI.saveMessages(serializedData, 'friend')
     await window.electronAPI.saveMessages(serializedGroupData, 'group')
 }
 
@@ -151,15 +153,24 @@ const handleRefresh = () => {
     }, 2000)
 }
 
-const additionDialog = ref(false)
+const contactAdditionDialog = ref(false)
+const groupAdditionDialog = ref(false)
 const infoDialog = ref(false)
 
-const openAddDialog = () => {
-    additionDialog.value = true
+const openContactDialog = () => {
+    contactAdditionDialog.value = true
+}
+
+const openGroupDialog = () => {
+    groupAdditionDialog.value = true
 }
 
 const openInfoDialog = () => {
     infoDialog.value = true
+}
+
+const switchGroupCard = () => {
+    mainComponent.value = GroupCreate
 }
 
 
@@ -192,7 +203,7 @@ watch(() => messageStore().other, (newVal) => {
     <div id="main">
         <el-container class="container" v-loading='loading' element-loading-text="Loading...">
             <el-container>
-                <SidebarMenu @refresh="handleRefresh" @addition="openAddDialog" @info="openInfoDialog"/>
+                <SidebarMenu @refresh="handleRefresh" @addContact="openContactDialog" @info="openInfoDialog" @createGroup="switchGroupCard" @joinGroup="openGroupDialog"/>
                 <el-aside class="aside">
                     <component :key="key" :is="asideComponent"></component>
                 </el-aside>
@@ -202,12 +213,16 @@ watch(() => messageStore().other, (newVal) => {
                 </el-main>
             </el-container>
         </el-container>
-        <el-dialog v-model="additionDialog" class="no-drag">
+        <el-dialog v-model="contactAdditionDialog" class="no-drag">
             <ContactSearchAdd/>
+        </el-dialog>
+        <el-dialog v-model="groupAdditionDialog" class="no-drag">
+            <GroupSearchAdd/>
         </el-dialog>
         <el-dialog v-model="infoDialog" class="no-drag">
             <Information/>
         </el-dialog>
+
     </div>
 </template>
 

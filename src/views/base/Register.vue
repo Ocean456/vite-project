@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {register as apiRegister, sendEmailCode, login as apiLogin} from "../../api";
+import {register as apiRegister, sendEmailCode, login as apiLogin} from "../../request";
 import {onMounted, ref} from "vue";
 import {ElMessage} from "element-plus";
 import {useRouter} from "vue-router";

@@ -2,7 +2,7 @@
 
 import {messageStore} from "../../store";
 import {onMounted, ref} from "vue";
-import {searchContact} from "../../api";
+import {searchContact} from "../../request";
 
 const props = defineProps<{
     username?: string

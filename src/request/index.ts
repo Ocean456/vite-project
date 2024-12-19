@@ -31,6 +31,9 @@ export const searchContact = (username: string) =>
 export const addContact = (username: string) =>
     api.get('/api/contact/add', {params: {username}})
 
+export const deleteContact = (username: string) =>
+    api.delete('/api/contact/delete', {params: {username}})
+
 export const getMessages = () =>
     api.get('/api/message/personal')
 
@@ -58,8 +61,14 @@ export const modifyAvatar = (file: File) => {
 export const sendMessageToUser = (sender: string, receiver: string, content: string) =>
     api.post('/api/message/send', {sender, receiver, content})
 
-export const uploadImage = (file: File) => {
-    const formData = new FormData();
-    formData.append('file', file);
-    return api.post('/api/image/upload', formData, {headers: {'Content-Type': 'multipart/form-data'}})
-}
+export const sendMessageToGroup = (sender: string, receiver: string, content: string) =>
+    api.post('/api/message/send/group', {sender, receiver, content})
+
+export const createGroup = (name: string, avatar: string, description: string) =>
+    api.post('/api/group/create', {name, avatar, description})
+
+export const joinGroup = (number: string) =>
+    api.get('/api/group/join', {params: {number}})
+
+export const searchGroup = (number: string) =>
+    api.get('/api/group/search', {params: {number}})

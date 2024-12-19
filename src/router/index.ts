@@ -7,6 +7,7 @@ const index = createRouter({
         {
             path: '/',
             redirect: '/login'
+
         },
         {
             path: '/about',
@@ -27,6 +28,10 @@ const index = createRouter({
         {
             path: '/info',
             component: () => import('../components/personal/Information.vue')
+        },
+        {
+            path: '/statistics',
+            component: () => import('../views/main/Statistics.vue')
         }
     ]
 })

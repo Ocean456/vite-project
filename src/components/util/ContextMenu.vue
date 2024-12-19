@@ -62,6 +62,7 @@ function handleClick(item: any) {
     z-index: 9999;
     padding: 10px;
     width: 120px;
+    border: 1px solid var(--el-border-color);
 }
 
 .menu-item {

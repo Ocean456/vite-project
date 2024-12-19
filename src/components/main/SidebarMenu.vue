@@ -1,8 +1,13 @@
 <script setup lang="ts">
-import {ChatLineRound, Moon, Plus, Refresh, Setting, SwitchButton, Tickets} from "@element-plus/icons-vue";
-import {userStore} from "../../store";
+import {
+    ChatLineRound, Odometer, Plus,
+    Refresh,
+    Setting,
+    Tickets
+} from "@element-plus/icons-vue";
+import {settingStore, userStore} from "../../store";
 import router from "../../router";
-import {nextTick} from "vue";
+import {nextTick, onMounted, ref, watch} from "vue";
 
 const logout = async () => {
     userStore().logout()
@@ -12,10 +17,27 @@ const logout = async () => {
     }
 }
 
+const setting = ref(false);
+
+const theme = ref<string>()
+
+const themeSetting = ref<boolean>(false)
 
 const toggleTheme = () => {
-    document.documentElement.classList.toggle('dark');
+    theme.value = theme.value === 'dark' ? 'light' : 'dark'
+    settingStore().setTheme(theme.value)
 }
+
+
+watch(theme, (val) => {
+    document.documentElement.classList.toggle('dark')
+    themeSetting.value = val === 'dark'
+})
+
+
+onMounted(() => {
+    theme.value = settingStore().getTheme()
+})
 
 </script>
 
@@ -35,45 +57,55 @@ const toggleTheme = () => {
                 </el-icon>
                 <span slot="title">消息</span>
             </el-menu-item>
-
-            <el-menu-item class="no-drag">
-                <el-icon>
-                    <Tickets/>
-                </el-icon>
-                <span slot="title">群组</span>
-            </el-menu-item>
-            <el-menu-item class="no-drag" @click="$emit('addition')">
+            <el-menu-item class="no-drag" @click="$emit('addContact')">
                 <el-icon>
                     <Plus/>
                 </el-icon>
+                <span slot="title">添加</span>
             </el-menu-item>
+
+            <el-sub-menu class="no-drag">
+                <template #title>
+                    <el-icon>
+                        <Tickets/>
+                    </el-icon>
+                </template>
+                <el-menu-item style="height: 40px;" class="no-drag" @click="$emit('joinGroup')">
+                    <span slot="title">添加群组</span>
+                </el-menu-item>
+                <el-menu-item style="height: 40px;" class="no-drag" @click="$emit('createGroup')">
+                    <span slot="title">创建群组</span>
+                </el-menu-item>
+            </el-sub-menu>
+
             <el-menu-item class="no-drag" @click="$emit('refresh')">
                 <el-icon>
                     <Refresh/>
                 </el-icon>
                 <span slot="title">刷新</span>
             </el-menu-item>
-            <el-menu-item class="menu-dark no-drag" @click="toggleTheme">
-                <el-icon>
-                    <Moon/>
-                </el-icon>
-                <span slot="title">深色</span>
-            </el-menu-item>
-            <el-menu-item class=" no-drag" @click="logout">
-                <el-icon>
-                    <SwitchButton/>
-                </el-icon>
-                <span slot="title">退出</span>
-            </el-menu-item>
-
             <div class="flex-grow"></div>
-            <el-menu-item class="menu-setting no-drag">
+            <el-menu-item class="no-drag" @click="router.push('/statistics')">
+                <el-icon>
+                    <Odometer/>
+                </el-icon>
+                <span slot="title">统计</span>
+            </el-menu-item>
+            <el-menu-item @click="setting=!setting" class="menu-setting no-drag">
                 <el-icon>
                     <Setting/>
                 </el-icon>
                 <span slot="title">设置</span>
             </el-menu-item>
         </el-menu>
+        <el-drawer class="no-drag" v-model="setting" :append-to-body="true" :show-close="false">
+            <div class="theme-setting">
+                <el-text>主题：</el-text>
+                <el-switch v-model="themeSetting" active-text="深色" inactive-text="浅色" size="small"
+                           @change="toggleTheme" class="setting-switch"></el-switch>
+            </div>
+            <el-button @click="logout" style="width: 100%; margin-top: 20px">退出登录</el-button>
+        </el-drawer>
     </div>
 </template>
 
@@ -93,13 +125,15 @@ const toggleTheme = () => {
     margin: 15px 0;
 }
 
-/*.menu-setting {
-    position: absolute;
-    bottom: 0;
-}*/
 
 .flex-grow {
     flex-grow: 1;
+}
+
+
+.theme-setting {
+    display: flex;
+    font-family: "Helvetica", "SourceHanSans", sans-serif;
 }
 
 

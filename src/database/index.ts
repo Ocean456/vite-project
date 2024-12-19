@@ -49,6 +49,11 @@ class DatabaseService {
                 timestamp TEXT,
                 status INTEGER DEFAULT 0
             );`,
+            `CREATE TABLE IF NOT EXISTS local_login (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                username TEXT UNIQUE,
+                password TEXT
+                );`
 
         ];
 
@@ -57,7 +62,8 @@ class DatabaseService {
             this.db.exec(query);
         });
 
-        const checkConfigQuery = `SELECT COUNT(*) as count FROM config;`;
+        const checkConfigQuery = `SELECT COUNT(*) as count
+                                  FROM config;`;
         const stmt = this.db.prepare(checkConfigQuery);
         const result: any = stmt.get();
 
@@ -93,9 +99,8 @@ class DatabaseService {
 
     async saveMessages(messages: any[], type: string): Promise<void> {
         let Query: string = '';
-
         switch (type) {
-            case 'default':
+            case 'friend':
                 Query = `INSERT INTO messages (mid, sender, receiver, content, timestamp) VALUES (?, ?, ?, ?,?);`;
                 break;
             case 'group':
@@ -118,7 +123,7 @@ class DatabaseService {
             if (lastMessage) {
                 const lastMid = lastMessage.mid;
                 try {
-                    if (type === 'default') {
+                    if (type === 'friend') {
                         const updateConfigQuery = `UPDATE config SET value = ? WHERE key = 'lastSyncMessageId';`;
                         this.db.prepare(updateConfigQuery).run(lastMid.toString());
                     }
@@ -137,26 +142,55 @@ class DatabaseService {
     async getMessages(param: string, type: string): Promise<any> {
         let query: string = '';
 
-        if (type === 'default') {
-            query = `SELECT * FROM messages WHERE receiver = ? OR sender = ?;`;
+        if (type === 'friend') {
+            query = `SELECT *
+                     FROM messages
+                     WHERE receiver = ?
+                        OR sender = ?;`;
             const stmt = this.db.prepare(query);
             return JSON.stringify(stmt.all([param, param]));
         } else if (type === 'group') {
-            query = `SELECT * FROM groups_messages WHERE receiver = ?;`;
+            query = `SELECT *
+                     FROM groups_messages
+                     WHERE receiver = ?;`;
             const stmt = this.db.prepare(query);
             return JSON.stringify(stmt.all([param]));
         }
 
     }
 
+    async getLocalLogin(): Promise<any> {
+        try {
+            const query = `SELECT *
+                           FROM local_login;`;
+            const stmt = this.db.prepare(query);
+            return JSON.stringify(stmt.all());
+        } catch (error) {
+            console.error('Database getLocalLogin error:', error);
+            throw error;
+        }
+    }
+
 
     async getConfig(): Promise<any> {
         try {
-            const query = `SELECT * FROM config;`;
+            const query = `SELECT *
+                           FROM config;`;
             const stmt = this.db.prepare(query);
             return JSON.stringify(stmt.all());
         } catch (error) {
             console.error('Database getConfig error:', error);
+            throw error;
+        }
+    }
+
+    async setLocalLogin(data: any) {
+        try {
+            const query = `INSERT INTO local_login (username, password) VALUES (?, ?);`;
+            const stmt = this.db.prepare(query);
+            stmt.run(data.username, data.password);
+        } catch (error) {
+            console.error('Database setLocalLogin error:', error);
             throw error;
         }
     }

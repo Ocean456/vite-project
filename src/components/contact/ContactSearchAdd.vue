@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {ref} from "vue";
-import {searchContact, addContact, sendMessageToUser} from "../../api";
+import {searchContact, addContact, sendMessageToUser} from "../../request";
 import {contactStore, userStore} from "../../store";
 import {ElNotification} from "element-plus";
 
@@ -44,7 +44,7 @@ const add = (username: string) => {
         result.value = result.value.filter(item => item.username !== username);
         sendMessageToUser(userStore().username, username, '你好，我是' + userStore().nickname).then((res) => {
             const message = JSON.stringify([res.data]);
-            window.electronAPI.saveMessages(message, 'default');
+            window.electronAPI.saveMessages(message, 'friend');
         });
     });
 };

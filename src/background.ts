@@ -1,7 +1,7 @@
 import {app, BrowserWindow, ipcMain, Menu, Tray, Notification} from 'electron';
 import * as path from 'node:path';
 import express from 'express';
-import DatabaseService from "./db";
+import DatabaseService from "./database";
 
 const expressApp = express();
 expressApp.use(express.static('public'));
@@ -105,8 +105,6 @@ function showSystemNotification() {
 
 app.whenReady().then(() => {
 
-    // ipcMain.handle('dialog:openFile', handleFileOpen);
-
     createWindow();
     showSystemNotification()
 
@@ -141,6 +139,24 @@ app.whenReady().then(() => {
         }
     });
 
+    ipcMain.handle('get-local-login', async () => {
+        try {
+            return await db.getLocalLogin();
+        } catch (error) {
+            console.error('Error fetching local login data:', error);
+            throw error;
+        }
+    });
+
+    ipcMain.handle('set-local-login', async (_, data) => {
+        try {
+            await db.setLocalLogin(data);
+        } catch (error) {
+            console.error('Error setting local login data:', error);
+            throw error;
+        }
+    });
+
     tray = new Tray(path.join(__dirname, 'cloud.png'));
     tray.setToolTip('This is my application.');
     const contextMenu = Menu.buildFromTemplate([
@@ -161,11 +177,6 @@ app.on('window-all-closed', () => {
     }
 });
 
-// async function handleFileOpen() {
-//     const {canceled, filePaths} = await dialog.showOpenDialog({});
-//     if (!canceled) {
-//         return filePaths[0];
-//     }
-// }
+
 
 

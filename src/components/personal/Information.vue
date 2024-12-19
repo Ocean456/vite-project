@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {ref, watch, onMounted} from "vue";
-import {getSelfInfo, modifyPersonalInfo, modifyAvatar} from "../../api";
+import {getSelfInfo, modifyPersonalInfo, modifyAvatar} from "../../request";
 import {pcaTextArr} from "element-china-area-data";
 import {messageStore, userStore} from "../../store";
 import {ElMessage} from "element-plus";

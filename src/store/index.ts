@@ -39,18 +39,6 @@ export const messageStore = defineStore('msg', {
         type: ''
     }),
     actions: {
-        setOther(other: string) {
-            this.other = other
-        },
-        setOtherAvatar(avatar: string) {
-            this.otherAvatar = avatar
-        },
-        setOtherNickname(nickname: string) {
-            this.otherNickname = nickname
-        },
-        setType(type: string) {
-            this.type = type
-        },
         switchUser(other: string, otherAvatar: string, otherNickname: string, type: string) {
             this.other = other
             this.otherAvatar = otherAvatar
@@ -64,7 +52,6 @@ export const messageStore = defineStore('msg', {
             this.otherAvatar = ''
             this.otherNickname = ''
         }
-
     },
 
 })
@@ -79,7 +66,7 @@ export const contactStore = defineStore('contact', {
             this.contacts = contacts
         },
         getContact(username: string) {
-            return this.contacts.find((contact: any) => contact.contactUsername === username)
+            return this.contacts.find((contact: any) => contact.username === username)
         },
         getContacts() {
             return this.contacts
@@ -110,3 +97,18 @@ export const groupStore = defineStore('group', {
         },
     }
 })
+
+export const settingStore = defineStore('setting', {
+    state: () => ({
+        theme: 'dark',
+    }),
+    actions: {
+        setTheme(theme: string) {
+            this.theme = theme
+        },
+        getTheme() {
+            return this.theme
+        }
+    }
+})
+

@@ -1,7 +1,6 @@
 import {contextBridge, ipcRenderer} from 'electron';
 
 contextBridge.exposeInMainWorld('electronAPI', {
-    // openFile: () => ipcRenderer.invoke('dialog:openFile'),
     setWindow: (data: any) => ipcRenderer.send('set-window', data),
     minimize: () => ipcRenderer.send('minimize'),
     maximize: () => ipcRenderer.send('maximize'),
@@ -9,6 +8,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
     hide: () => ipcRenderer.send('hide'),
     saveMessages: (messages: any[], type: string) => ipcRenderer.invoke('save-messages', {messages, type}),
     getMessages: (param: string, type: string) => ipcRenderer.invoke('get-messages', {param, type}),
+    getLocalLogin: () => ipcRenderer.invoke('get-local-login'),
     getConfig: () => ipcRenderer.invoke('get-config'),
     openChildWindow: (data: any) => ipcRenderer.send('open-child-window', data)
 })

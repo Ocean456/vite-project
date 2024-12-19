@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {onMounted, ref} from 'vue'
-import {login as apiLogin} from '../../api'
+import {login as apiLogin} from '../../request'
 import router from '../../router'
 import {ElMessage} from 'element-plus'
 import {userStore} from '../../store'
@@ -9,6 +9,9 @@ import {Close} from '@element-plus/icons-vue'
 const username = ref('')
 const password = ref('')
 const loading = ref(false)
+
+const everLoggedIn = ref(false)
+
 
 const {setToken} = userStore()
 
@@ -19,6 +22,7 @@ const login = async () => {
             const token = res.headers['authorization'].split(' ')[1]
             localStorage.setItem('token', token)
             setToken(token)
+            window.electronAPI?.setLocalLogin({username: username.value, password: password.value})
             await router.push('/main')
         } else {
             ElMessage.warning('登录失败' + res.data)
@@ -30,6 +34,7 @@ const login = async () => {
             ElMessage.warning('服务器错误')
         }
     }
+
 }
 
 const handleClose = () => {
@@ -37,20 +42,23 @@ const handleClose = () => {
 
 }
 
-onMounted(() => {
-    const token = localStorage.getItem('token')
-    if (token) {
-        setToken(token)
-        router.push('/main')
-    } else {
-        window.electronAPI?.setWindow({width: 400, height: 370})
-    }
+onMounted(async () => {
+    // const token = localStorage.getItem('token')
+    // if (token) {
+    //     setToken(token)
+    //     router.push('/main')
+    // } else {
+    //     window.electronAPI?.setWindow({width: 400, height: 370})
+    // }
+
+    everLoggedIn.value = await window.electronAPI?.getLocalLogin() !== null
 
 })
 </script>
 
 <template>
     <div id="login">
+
         <el-card class="card drag" v-loading="loading" element-loading-text="登录成功...正在加载">
             <div class="close-wrapper no-drag" @click="handleClose">
                 <el-icon class="close">
@@ -74,7 +82,9 @@ onMounted(() => {
                     <div class="no-drag" style="display:flex; margin-top: -12px">
                         <el-link :underline="false" style="font-size: 12px;color: #c0c4cc">忘记密码？</el-link>
                         <div class="flex-grow"></div>
-                        <el-link @click="router.push('/register')" :underline="false" style="font-size: 12px;color: #c0c4cc">没有账号？去注册</el-link>
+                        <el-link @click="router.push('/register')" :underline="false"
+                                 style="font-size: 12px;color: #c0c4cc">没有账号？去注册
+                        </el-link>
                     </div>
                 </el-form>
                 <el-button class="button no-drag" type="primary" @click="login">登录</el-button>
@@ -105,6 +115,8 @@ onMounted(() => {
     text-align: center;
     font-size: 20px;
     margin-top: 20px;
+    color: var(--el-text-color);
+
 }
 
 .form-wrapper {
@@ -133,9 +145,6 @@ onMounted(() => {
 
 }
 
-:deep(.el-card) {
-    background-color: #f5f7fa;
-}
 
 :deep(.el-input__inner) {
     text-align: center;

@@ -43,6 +43,13 @@ export const ElectronBuilderPlugin = (): Plugin => {
                     asarUnpack: [
                         'node_modules/**/*'
                     ],
+                    win: {
+                        target: [{
+                            target: 'nsis',
+                            arch: ['x64']
+                        }]
+                    }
+
 
                 }
             })
